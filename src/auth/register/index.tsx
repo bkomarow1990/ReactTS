@@ -4,7 +4,7 @@ import { IRegister } from "./types";
 import { RegisterSchema } from "./validation";
 import classNames from "classnames";
 import "cropperjs/dist/cropper.css";
-import { Cropper, ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 import ImageCropper from "../../components/helpers/cropper";
 
 const RegisterPage = () => {
@@ -196,6 +196,7 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 className={classNames(
                   "form-control",
+                  "js-photo-upload",
                   { "is-invalid": touched.photo && errors.photo },
                   { "is-valid": touched.photo && !errors.photo }
                 )}
@@ -203,7 +204,8 @@ const RegisterPage = () => {
               {touched.photo && errors.photo && (
                 <div className="invalid-feedback">{errors.photo}</div>
               )}
-              <ImageCropper></ImageCropper>
+              <img id="avatar-crop" src=""></img>
+              {/* <ImageCropper></ImageCropper> */}
               {/* <Cropper
                 style={{ height: 400, width: "100%" }}
                 initialAspectRatio={16 / 9}
