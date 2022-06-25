@@ -3,14 +3,17 @@ import Cropper from "cropperjs";
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import "./style.css";
 import "cropperjs/dist/cropper.css";
+import { ICropperDialog } from "./types";
 
-const CropperDialog: React.FC = () => {
+const CropperDialog: React.FC<ICropperDialog> = ({onChange, field, error, touched, value, aspectRation=1/1}) => {
   const [show, setShow] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<string>("https://thumbs.dreamstime.com/b/happy-cute-little-kid-girl-choose-clothes-174609315.jpg");
+
   const [image, setImage] = useState<string>("");
   const [cropperObj, setCropperObj] = useState<Cropper>();
   const imgRef = useRef<HTMLImageElement>();
   const imgPrev = useRef<HTMLImageElement>();
-  const [croppedImage, setCroppedImage] = useState<string>();
+  //const [croppedImage, setCroppedImage] = useState<string>();
   useEffect(() => {
     if (imgRef.current) {
       const cropper = new Cropper(imgRef.current as HTMLImageElement, {
@@ -19,7 +22,7 @@ const CropperDialog: React.FC = () => {
         preview: imgPrev.current,
       });
       setCropperObj(cropper);
-      cropperObj?.getCroppedCanvas().toBlob();
+      //cropperObj?.getCroppedCanvas().toBlob();
     }
   }, []);
   const handleImageSelect = (e: React.FormEvent<HTMLInputElement>) => {
@@ -34,9 +37,15 @@ const CropperDialog: React.FC = () => {
     }
     e.currentTarget.value = "";
   };
-  const saveChanges = () =>{
+  // const saveChanges = () =>{
   
-   setCroppedImage(cropperObj?.getCroppedCanvas().toDataURL("image/png"));
+  //  setCroppedImage(cropperObj?.getCroppedCanvas().toDataURL("image/png"));
+  // }
+  const handleSelectImage = () => {
+    const base64 = cropperObj?.getCroppedCanvas().toDataURL() as string;
+    onChange(field, base64);
+    setCurrentImage(base64);
+    toggleModal();
   }
   const toggleModal = () => {
     setShow((prev) => !prev);
@@ -47,15 +56,16 @@ const CropperDialog: React.FC = () => {
         
         <img
           style={{ cursor: "pointer" }}
-          src={croppedImage || "https://thumbs.dreamstime.com/b/happy-cute-little-kid-girl-choose-clothes-174609315.jpg"}
+          src={currentImage || "https://thumbs.dreamstime.com/b/happy-cute-little-kid-girl-choose-clothes-174609315.jpg"}
           width="150"
           alt="Оберіть фото"
         />
       </label>
       <input
         type="file"
-        className="d-none"
+        // className="d-none"
         id="image"
+        accept="image/*"
         onChange={handleImageSelect}
       />
       <div className={classNames("modal fade show", { "custom-modal": show })}>
@@ -110,7 +120,7 @@ const CropperDialog: React.FC = () => {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary" onClick={saveChanges}>
+              <button type="button" className="btn btn-primary" onClick={handleSelectImage}>
                 Save changes
               </button>
             </div>

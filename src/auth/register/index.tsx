@@ -176,7 +176,7 @@ const RegisterPage = () => {
             
 
             <div className="mb-3">
-              <label htmlFor="photo" className="form-label">
+              {/* <label htmlFor="photo" className="form-label">
                 Photo
               </label>
               <input
@@ -192,8 +192,9 @@ const RegisterPage = () => {
               />
               {touched.photo && errors.photo && (
                 <div className="invalid-feedback">{errors.photo}</div>
-              )}
-              <CropperDialog></CropperDialog>
+              )} */}
+              <h3>Select profile picture</h3>
+              <CropperDialog onChange={setFieldValue} field="photo" error={errors.photo} touched={touched.photo} aspectRation={1/1}></CropperDialog>
               {/* <img id="avatar-crop" src=""></img>  */}
               {/* <ImageCropper></ImageCropper> */}
               {/* <Cropper
