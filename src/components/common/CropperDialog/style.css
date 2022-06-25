@@ -1,0 +1,5 @@
+.custom-modal {
+    display: block;
+    background-color: rgba(94, 76, 76, 0.278);
+    backdrop-filter: blur(1px);
+}

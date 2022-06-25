@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { IRegister } from "./types";
 import { RegisterSchema } from "./validation";
 import classNames from "classnames";
-import "cropperjs/dist/cropper.css";
-import "cropperjs/dist/cropper.css";
-import ImageCropper from "../../components/helpers/cropper";
+
+import CropperDialog from "../../components/common/CropperDialog";
 
 const RegisterPage = () => {
   const initialValues: IRegister = {
@@ -30,33 +29,24 @@ const RegisterPage = () => {
   const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
 
 
-  const [image, setImage] = useState("");
-  const [cropData, setCropData] = useState("#");
-  const imageRef = useRef<ReactCropperElement>(null);
-  const [cropper, setCropper] = useState<Cropper>();
 
-  const onChange = (e: any) => {
-    e.preventDefault();
-    let files;
-    if (e.dataTransfer) {
-        files = e.dataTransfer.files;
-    } else if (e.target) {
-        files = e.target.files;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-        setImage(reader.result as any);
-    };
-    reader.readAsDataURL(files[0]);
-};
+//   const onChange = (e: any) => {
+//     e.preventDefault();
+//     let files;
+//     if (e.dataTransfer) {
+//         files = e.dataTransfer.files;
+//     } else if (e.target) {
+//         files = e.target.files;
+//     }
+//     const reader = new FileReader();
+//     reader.onload = () => {
+//         setImage(reader.result as any);
+//     };
+//     reader.readAsDataURL(files[0]);
+// };
 
 
 
-  const getCropData = () => {
-    if (typeof cropper !== 'undefined') {
-        setCropData(cropper.getCroppedCanvas().toDataURL());
-    }
-};
 
   return (
     <div className="row">
@@ -193,10 +183,9 @@ const RegisterPage = () => {
                 type="file"
                 name="photo"
                 id="photo"
-                onChange={handleChange}
+                hidden
                 className={classNames(
                   "form-control",
-                  "js-photo-upload",
                   { "is-invalid": touched.photo && errors.photo },
                   { "is-valid": touched.photo && !errors.photo }
                 )}
@@ -204,7 +193,8 @@ const RegisterPage = () => {
               {touched.photo && errors.photo && (
                 <div className="invalid-feedback">{errors.photo}</div>
               )}
-              <img id="avatar-crop" src=""></img>
+              <CropperDialog></CropperDialog>
+              {/* <img id="avatar-crop" src=""></img>  */}
               {/* <ImageCropper></ImageCropper> */}
               {/* <Cropper
                 style={{ height: 400, width: "100%" }}
