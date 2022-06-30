@@ -1,0 +1,1 @@
+export const Constants = Object.freeze({"apiUrl": "https://localhost:44382"});

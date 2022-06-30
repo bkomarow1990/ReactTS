@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Routes, Outlet, Link } from "react-router-dom";
 import "./App.css";
-import LoginPage from "./auth/login";
+import LoginPage from "./components/auth/login";
 import "bootstrap/dist/css/bootstrap.min.css";
 import HomePage from "./components/home";
 import HomeLayout from "./containers/homeLayout";
-import RegisterPage from "./auth/register";
+import RegisterPage from "./components/auth/register";
 
 const App = () => {
   return (

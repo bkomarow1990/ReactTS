@@ -58,6 +58,7 @@ const CropperDialog: React.FC<ICropperDialog> = ({onChange, field, error, touche
           style={{ cursor: "pointer" }}
           src={currentImage || "https://thumbs.dreamstime.com/b/happy-cute-little-kid-girl-choose-clothes-174609315.jpg"}
           width="150"
+          className="m-3"
           alt="Оберіть фото"
         />
       </label>

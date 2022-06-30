@@ -4,6 +4,6 @@ export const LoginSchema = yup.object({
     .string()
     .email('Enter an email')
     .required('It`s required field'),
-    password: yup.string().required('Enter a password'),
+    password: yup.string().required('Enter a password')
 });
 export default LoginSchema;

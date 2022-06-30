@@ -3,8 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { IRegister } from "./types";
 import { RegisterSchema } from "./validation";
 import classNames from "classnames";
-
-import CropperDialog from "../../components/common/CropperDialog";
+import axios from 'axios';
+import CropperDialog from "../../common/CropperDialog";
+import { Constants } from "../../../constants";
+import Swal from 'sweetalert2';
 
 const RegisterPage = () => {
   const initialValues: IRegister = {
@@ -12,19 +14,36 @@ const RegisterPage = () => {
     lastName: "",
     email: "",
     phone: "",
-    photo: "",
+    image: "",
     password: "",
     confirmPassword: "",
   };
 
   const onHandleSubmit = async (values: IRegister) => {
+    
     console.log(values);
+    axios.post(Constants.apiUrl+"/api/Account/register", values).then(data => {
+      console.log('data', data);
+      Swal.fire({
+        icon: 'success',
+        title: 'Nice!',
+        text: 'Happy registration!'
+      })
 
+    }).catch(err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      })
+      console.log(err);
+    
+    });
   };
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: RegisterSchema,
-    onSubmit: onHandleSubmit,
+    onSubmit: onHandleSubmit
   });
   const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
 
@@ -49,13 +68,13 @@ const RegisterPage = () => {
 
 
   return (
-    <div className="row">
+    <div className="row p-5">
       <div className="offset-md-3 col-md-6">
         <FormikProvider value={formik}>
           <Form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
-                Email
+                Email*
               </label>
               <input
                 type="email"
@@ -75,7 +94,7 @@ const RegisterPage = () => {
 
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-                Password
+                Password*
               </label>
               <input
                 type="password"
@@ -95,7 +114,7 @@ const RegisterPage = () => {
 
             <div className="mb-3">
               <label htmlFor="confirmPassword" className="form-label">
-                Password
+                Confirm Password*
               </label>
               <input
                 type="password"
@@ -194,7 +213,7 @@ const RegisterPage = () => {
                 <div className="invalid-feedback">{errors.photo}</div>
               )} */}
               <h3>Select profile picture</h3>
-              <CropperDialog onChange={setFieldValue} field="photo" error={errors.photo} touched={touched.photo} aspectRation={1/1}></CropperDialog>
+              <CropperDialog onChange={setFieldValue} field="image" error={errors.image} touched={touched.image} aspectRation={1/1}></CropperDialog>
               {/* <img id="avatar-crop" src=""></img>  */}
               {/* <ImageCropper></ImageCropper> */}
               {/* <Cropper
