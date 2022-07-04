@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 const HomeLayout = () => {
     return (
         <>
-        <GoogleReCaptchaProvider>
+        <GoogleReCaptchaProvider reCaptchaKey="6LcGVrcgAAAAAH4-U6DsX9rLB1008t6OssIS0DDN">
         <Navbar />
         <main>
             <div className="container">
