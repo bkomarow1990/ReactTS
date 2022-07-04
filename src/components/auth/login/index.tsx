@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import GoogleLogin, { GoogleLoginResponse, useGoogleLogin } from 'react-google-login';
 // import GoogleLogin from 'react-google-login';
 import ILogin from './types';
+import jwt_decode from 'jwt-decode';
 import LoginSchema from './validations';
 
 const LoginPage = () => {
@@ -32,6 +33,10 @@ const LoginPage = () => {
   //   onRequest,
   //   prompt
   // });
+  const onGoogleSignIn = (user : any) => {
+    let userCred = user.credential;
+    let payload = jwt_decode(userCred);
+  }
   const responseGoogle = (response : any) => {
     console.log(response);
   }
