@@ -1,17 +1,29 @@
 import classNames from 'classnames';
 import { Form, FormikProvider, useFormik } from 'formik';
 import React, { useEffect } from 'react'
-import GoogleLogin, { GoogleLoginResponse, useGoogleLogin } from 'react-google-login';
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, useGoogleLogin } from 'react-google-login';
 // import GoogleLogin from 'react-google-login';
 import ILogin from './types';
 import jwt_decode from 'jwt-decode';
 import LoginSchema from './validations';
+import { gapi } from 'gapi-script';
+import axios from 'axios';
 
 const LoginPage = () => {
   const initialValues: ILogin = {
     email: "",
     password: ""
   };
+  useEffect(()=> {
+    //console.log("Hello", process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID);
+    const start = () => {
+        gapi.client.init({
+            clientId: process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID,
+            scope: ''
+        });
+    }
+    gapi.load('client:auth2', start);
+}, []);
   // const { signIn, loaded } = useGoogleLogin({
   //   onSuccess,
   //   onAutoLoadFinished,
@@ -33,12 +45,13 @@ const LoginPage = () => {
   //   onRequest,
   //   prompt
   // });
-  const onGoogleSignIn = (user : any) => {
-    let userCred = user.credential;
-    let payload = jwt_decode(userCred);
-  }
-  const responseGoogle = (response : any) => {
+  // const onGoogleSignIn = (user : any) => {
+  //   let userCred = user.credential;
+  //   let payload = jwt_decode(userCred);
+  // }
+  const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.log(response);
+    axios.post('https://localhost:44382/api/Account', {idToken: (response as GoogleLoginResponse).tokenId})
   }
   const onHandleSubmit = async (values: ILogin) => {
     console.log(values);
@@ -49,16 +62,16 @@ const LoginPage = () => {
     validationSchema: LoginSchema,
     onSubmit: onHandleSubmit,
   });
-  const handleCallbackResponse = (response : any) => {
-    console.log(response);
-  }
-  useEffect(() => {
-    google.accounts.id.initialize({
-      client_id: "1033809612512-uhb2mlvh7kgv0dvcbnmanun0hjfcli8u.apps.googleusercontent.com",
-      callback: handleCallbackResponse
-  });
-  google.accounts.id.renderButton(document.getElementById('signInDiv'))
-  },[]);
+  // const handleCallbackResponse = (response : any) => {
+  //   console.log(response);
+  // }
+  // useEffect(() => {
+  //   google.accounts.id.initialize({
+  //     client_id: "1033809612512-uhb2mlvh7kgv0dvcbnmanun0hjfcli8u.apps.googleusercontent.com",
+  //     callback: handleCallbackResponse
+  // });
+  // google.accounts.id.renderButton(document.getElementById('signInDiv'))
+  // },[]);
   const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
   return (
     <div className="row">
@@ -110,7 +123,7 @@ const LoginPage = () => {
           <button type="submit" className="btn btn-primary">
             Login
           </button>
-          <GoogleLogin clientId='1033809612512-uhb2mlvh7kgv0dvcbnmanun0hjfcli8u.apps.googleusercontent.com' onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'}></GoogleLogin>
+          <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID as string} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'}></GoogleLogin>
         </Form>
       </FormikProvider>
     </div>
