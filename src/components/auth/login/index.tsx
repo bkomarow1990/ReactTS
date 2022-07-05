@@ -51,7 +51,7 @@ const LoginPage = () => {
   // }
   const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.log(response);
-    axios.post('https://localhost:44382/api/Account', {idToken: (response as GoogleLoginResponse).tokenId})
+    axios.post('https://localhost:44382/api/Account', {idToken: (response as GoogleLoginResponse).tokenId}).then(res => {console.log(res)}).catch(err => console.log(err))
   }
   const onHandleSubmit = async (values: ILogin) => {
     console.log(values);
