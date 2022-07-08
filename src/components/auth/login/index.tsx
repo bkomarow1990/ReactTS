@@ -3,17 +3,21 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import React, { useEffect } from 'react'
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, useGoogleLogin } from 'react-google-login';
 // import GoogleLogin from 'react-google-login';
-import ILogin from './types';
-import jwt_decode from 'jwt-decode';
+import ILogin, { ILoginError } from './types';
+//import jwt_decode from 'jwt-decode';
 import LoginSchema from './validations';
 import { gapi } from 'gapi-script';
 import axios from 'axios';
+import { useActions } from '../../../hooks/useActions';
+import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage : React.FC = () => {
   const initialValues: ILogin = {
     email: "",
     password: ""
   };
+  const { LoginUser } = useActions();
+  const navigate = useNavigate();
   useEffect(()=> {
     //console.log("Hello", process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID);
     const start = () => {
@@ -55,7 +59,14 @@ const LoginPage = () => {
   }
   const onHandleSubmit = async (values: ILogin) => {
     console.log(values);
-
+    try{
+    await LoginUser(values);
+    await navigate('/');
+    }
+    catch(errors){
+      console.log(errors);
+      const serverErrors = errors as ILoginError;
+    }
   };
   const formik = useFormik({
     initialValues: initialValues,
