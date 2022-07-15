@@ -10,6 +10,7 @@ import { gapi } from 'gapi-script';
 import axios from 'axios';
 import { useActions } from '../../../hooks/useActions';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const LoginPage : React.FC = () => {
   const initialValues: ILogin = {
@@ -55,17 +56,43 @@ const LoginPage : React.FC = () => {
   // }
   const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.log(response);
-    axios.post('https://localhost:44382/api/Account', {idToken: (response as GoogleLoginResponse).tokenId}).then(res => {console.log(res)}).catch(err => console.log(err))
+    axios.post('https://localhost:44382/api/Account', {idToken: (response as GoogleLoginResponse).tokenId})
+    .then(res => {
+      console.log(res);
+      Swal.fire({
+        icon: "success",
+        title: "Nice!",
+        text: "Succefully login!",
+      });
+    }).catch(err => {
+      //console.log(err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Incorrect login or password!",
+      });
+      navigate('/');
+    })
   }
   const onHandleSubmit = async (values: ILogin) => {
     console.log(values);
     try{
-    await LoginUser(values);
-    await navigate('/');
+      await LoginUser(values);
+      await Swal.fire({
+        icon: "success",
+        title: "Nice!",
+        text: "Succefully login!",
+      });
+      await navigate('/');
     }
     catch(errors){
-      console.log(errors);
-      const serverErrors = errors as ILoginError;
+      //console.log(errors);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Incorrect login or password!",
+      });
+      //const serverErrors = errors as ILoginError;
     }
   };
   const formik = useFormik({

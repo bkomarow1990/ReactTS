@@ -1,10 +1,11 @@
 import { Dispatch } from "react";
 import http from "../../../http_common";
 import { AuthAction, AuthActionTypes, ILoginErrors, IUser } from "./types";
-import { decodeToken, isExpired, useJwt } from "react-jwt";
+//import { decodeToken, isExpired, useJwt } from "react-jwt";
 import axios, { AxiosError } from "axios";
 import setAuthToken from '../../../helpers/setAuthToken';
 import { ILogin } from './types';
+import jwtDecode from "jwt-decode";
 
 export interface ILoginResponse {
   token: string
@@ -34,8 +35,9 @@ export const setAuthUserByToken = (token: string , dispatch: Dispatch<any>) => {
 
   setAuthToken(token);
   localStorage.token = token;
-  const dataUser : any = decodeToken(token);
-  const isMyTokenExpired = isExpired(token);
+  const dataUser : any = jwtDecode(token);
+  console.log('data:' , dataUser);
+  //const isMyTokenExpired = isExpired(token);
   //const dataUser = jwt.decode(token, { json: true });
   
   const user: IUser = {
